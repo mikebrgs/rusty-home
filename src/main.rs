@@ -1,5 +1,8 @@
 extern crate chrono;
 
+use i2cdev::core::I2CDevice;
+use i2cdev::mock::MockI2CDevice;
+
 use chrono::offset::Utc;
 use chrono::DateTime;
 
@@ -8,7 +11,8 @@ use std::{thread, time, time::SystemTime};
 use hello_i2c;
 
 fn main() {
-    let mut sensor = hello_i2c::BME280::new();
+    let i2c = MockI2CDevice::new();
+    let mut sensor = hello_i2c::BME280::new(i2c);
 
     loop {
         let timestamp = SystemTime::now();

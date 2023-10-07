@@ -1,6 +1,7 @@
 use byteorder::{LittleEndian, BigEndian, ByteOrder};
 use i2cdev::core::I2CDevice;
 
+use crate::sensors::bme280::constants::registers;
 
 pub struct Calibration {
     pub temperature: TemperatureCalibration,
@@ -289,44 +290,6 @@ fn read_multiple_registers(dev: &mut impl I2CDevice, registers: &[u8]) -> Result
         }
     }
     Ok(buffer)
-}
-
-
-mod registers {
-    pub const DIG_T1_LSB_REG: u8 = 0x88;
-    pub const DIG_T1_MSB_REG: u8 = 0x89;
-    pub const DIG_T2_LSB_REG: u8 = 0x8A;
-    pub const DIG_T2_MSB_REG: u8 = 0x8B;
-    pub const DIG_T3_LSB_REG: u8 = 0x8C;
-    pub const DIG_T3_MSB_REG: u8 = 0x8D;
-
-    pub const DIG_P1_LSB_REG: u8 = 0x8E;
-    pub const DIG_P1_MSB_REG: u8 = 0x8F;
-    pub const DIG_P2_LSB_REG: u8 = 0x90;
-    pub const DIG_P2_MSB_REG: u8 = 0x91;
-    pub const DIG_P3_LSB_REG: u8 = 0x92;
-    pub const DIG_P3_MSB_REG: u8 = 0x93;
-    pub const DIG_P4_LSB_REG: u8 = 0x94;
-    pub const DIG_P4_MSB_REG: u8 = 0x95;
-    pub const DIG_P5_LSB_REG: u8 = 0x96;
-    pub const DIG_P5_MSB_REG: u8 = 0x97;
-    pub const DIG_P6_LSB_REG: u8 = 0x98;
-    pub const DIG_P6_MSB_REG: u8 = 0x99;
-    pub const DIG_P7_LSB_REG: u8 = 0x9A;
-    pub const DIG_P7_MSB_REG: u8 = 0x9B;
-    pub const DIG_P8_LSB_REG: u8 = 0x9C;
-    pub const DIG_P8_MSB_REG: u8 = 0x9D;
-    pub const DIG_P9_LSB_REG: u8 = 0x9E;
-    pub const DIG_P9_MSB_REG: u8 = 0x9F;
-
-    pub const DIG_H1_REG: u8 = 0xA1;
-    pub const DIG_H2_LSB_REG: u8 = 0xE1;
-    pub const DIG_H2_MSB_REG: u8 = 0xE2;
-    pub const DIG_H3_REG: u8 = 0xE3;
-    pub const DIG_H4_MSB_REG: u8 = 0xE4;
-    pub const DIG_H4_LSB_REG: u8 = 0xE5;
-    pub const DIG_H5_MSB_REG: u8 = 0xE6;
-    pub const DIG_H6_REG: u8 = 0xE7;
 }
 
 
