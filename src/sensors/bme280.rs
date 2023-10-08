@@ -1,14 +1,11 @@
 use std::u8;
-use std::io;
 
 use i2cdev::core::I2CDevice;
-use i2cdev::mock::MockI2CDevice;
 
 pub mod calibration;
 pub mod i2c;
 pub mod constants;
 
-use constants::registers;
 use constants::values;
 
 pub enum Mode {
@@ -181,7 +178,7 @@ impl<I2C: I2CDevice> BME280<I2C> {
 
     // Get the ID of the chip
     pub fn get_id(&mut self) -> Result<u8, String> {
-        let id = self.dev.smbus_read_byte_data(registers::CHIP_ID_REG).unwrap();
+        let id = i2c::read_id(&mut self.dev);
         if id != values::CHIP_ID {
             return Err(String::from("ID doesn't match specs."))
         }
@@ -190,152 +187,87 @@ impl<I2C: I2CDevice> BME280<I2C> {
 
     // Reset device
     pub fn reset(&mut self) -> Result<(), String> {
-        self.dev.smbus_write_byte_data(registers::RST_REG, values::SOFT_RESET).unwrap();
+        i2c::write_reset(&mut self.dev);
         Ok(())
     }
 
     // Get mode from the device
     pub fn get_mode(&mut self) -> Result<Mode, String> {
-        let control_data = self.dev.smbus_read_byte_data(registers::CTRL_MEAS_REG).unwrap();
-        let mode = control_data & 0x03;
+        let mode = i2c::read_mode(&mut self.dev);
         Ok(Mode::from(mode))
     }
 
     // Set the mode on the device
     pub fn set_mode(&mut self, mode: Mode) -> Result<(),String> {
-        let mut control_data = self.dev.smbus_read_byte_data(registers::CTRL_MEAS_REG).unwrap();
-        control_data = control_data & 0xFC;
-        control_data = control_data | u8::from(mode);
-        self.dev.smbus_write_byte_data(registers::CTRL_MEAS_REG, control_data).unwrap();
+        i2c::write_mode(&mut self.dev, u8::from(mode));
         Ok(())
     }
 
     // Is the device measuring
    pub fn is_measuring(&mut self) -> Result<bool, String> {
-        let status = self.dev.smbus_read_byte_data(registers::STAT_REG).unwrap();
-        // Check bit 3 is set to 1
-        Ok(((status & 0x04) >> 2) == 1)
+        Ok(i2c::read_measuring_bit(&mut self.dev) == 1)
     }
 
     // Is the device copying NVM data to image registers
     pub fn is_updating(&mut self) -> Result<bool, String> {
-        let status = self.dev.smbus_read_byte_data(registers::STAT_REG).unwrap();
         // Check bit 0 is set to 1
-        Ok((status & 0x01) == 1)
+        Ok((i2c::read_updating_bit(&mut self.dev)) == 1)
     }
 
     pub fn set_humidity_oversample(&mut self, rate: Oversampling) -> Result<(), String> {
         let device_mode = self.get_mode().unwrap();
         self.set_mode(Mode::Sleep).unwrap();
-
-        let mut control_humidity = self.dev.smbus_read_byte_data(registers::CTRL_HUMIDITY_REG).unwrap();
-        control_humidity = control_humidity & 0xF8;
-        control_humidity = control_humidity | u8::from(rate);
-
-        self.dev.smbus_write_byte_data(registers::CTRL_HUMIDITY_REG, control_humidity).unwrap();
-
+        i2c::write_humidity_oversample(&mut self.dev, u8::from(rate));
         self.set_mode(device_mode).unwrap();
-
         Ok(())
     }
 
     pub fn set_temperature_oversample(&mut self, rate: Oversampling) -> Result<(), String> {
         let device_mode = self.get_mode().unwrap();
         self.set_mode(Mode::Sleep).unwrap();
-
-        let mut control_temperature = self.dev.smbus_read_byte_data(registers::CTRL_MEAS_REG).unwrap();
-
-        // Clear temperature bits and place new rate there
-        control_temperature = control_temperature & 0x1F;
-        control_temperature = control_temperature | (u8::from(rate) << 5);
-
-        self.dev.smbus_write_byte_data(registers::CTRL_MEAS_REG, control_temperature).unwrap();
-
+        i2c::write_temperature_oversample(&mut self.dev, u8::from(rate));
         self.set_mode(device_mode).unwrap();
-
         Ok(())
     }
 
     pub fn set_pressure_oversample(&mut self, rate: Oversampling) -> Result<(), String> {
         let device_mode = self.get_mode().unwrap();
         self.set_mode(Mode::Sleep).unwrap();
-
-        let mut control_pressure = self.dev.smbus_read_byte_data(registers::CTRL_MEAS_REG).unwrap();
-
-        // Clear pressure bits and put new rate there
-        control_pressure = control_pressure & 0xE3;
-        control_pressure = control_pressure | (u8::from(rate) << 2);
-
-        self.dev.smbus_write_byte_data(registers::CTRL_MEAS_REG, control_pressure).unwrap();
-
+        i2c::write_pressure_oversample(&mut self.dev, u8::from(rate));
         self.set_mode(device_mode).unwrap();
 
         Ok(())
     }
 
     pub fn set_standby_time(&mut self, standby: StandyTime) -> Result<(), String> {
-        let mut standby_control = self.dev.smbus_read_byte_data(registers::CONFIG_REG).unwrap();
-
-        standby_control = standby_control & 0x1F;
-        standby_control = standby_control | (u8::from(standby) << 5);
-
-        self.dev.smbus_write_byte_data(registers::CONFIG_REG, standby_control).unwrap();
-
+        i2c::write_standby_time(&mut self.dev, u8::from(standby));
         Ok(())
     }
 
     pub fn set_filter(&mut self, filter: Filter) -> Result<(), String> {
-        let mut filter_control = self.dev.smbus_read_byte_data(registers::CONFIG_REG).unwrap();
-
-        filter_control = filter_control & 0xE3;
-        filter_control = filter_control | (u8::from(filter) << 2);
-
-        self.dev.smbus_write_byte_data(registers::CONFIG_REG, filter_control).unwrap();
-
+        i2c::write_filter(&mut self.dev, u8::from(filter));
         Ok(())
     }
 
     // Get temperature from the sensor.
     pub fn get_temperature_celsius(&mut self) -> Result<f64, String> {
-        let adc_t = Self::get_temperature_raw(&mut self.dev);
-
+        let adc_t = i2c::get_temperature_raw(&mut self.dev);
         self.t_fine = self.calibration.temperature.compensate_temperature(adc_t as i32);
-
         let output = (self.t_fine * 5 + 128) >> 8;
         Ok(f64::from(output) / 100.0)
     }
 
-    pub fn get_temperature_raw(dev: &mut impl I2CDevice) -> u32 {
-        let t1 = dev.smbus_read_byte_data(registers::TEMPERATURE_MSB_REG).unwrap();
-        let t2 = dev.smbus_read_byte_data(registers::TEMPERATURE_LSB_REG).unwrap();
-        let t3 = dev.smbus_read_byte_data(registers::TEMPERATURE_XLSB_REG).unwrap();
-
-        (u32::from(t1) << 12) | (u32::from(t2) << 4) | ((u32::from(t3) >> 4) & 0x0F)
-    }
-
     pub fn get_pressure_pascal(&mut self) -> Result<f64, String> {
-        let adc_p = Self::get_pressure_raw(&mut self.dev);
+        let adc_p = i2c::get_pressure_raw(&mut self.dev);
         let pressure = self.calibration.pressure.compensate_pressure(adc_p as i32, self.t_fine);
         Ok(f64::from(pressure) / 256.0)
     }
 
-    pub fn get_pressure_raw(dev: &mut impl I2CDevice) -> u32 {
-        let p1 = dev.smbus_read_byte_data(registers::PRESSURE_MSB_REG).unwrap();
-        let p2 = dev.smbus_read_byte_data(registers::PRESSURE_LSB_REG).unwrap();
-        let p3 = dev.smbus_read_byte_data(registers::PRESSURE_XLSB_REG).unwrap();
-
-        (u32::from(p1) << 12) | (u32::from(p2) << 4) | ((u32::from(p3) >> 4) & 0x0F)
-    }
-
     pub fn get_humidity_relative(&mut self) -> Result<f64, String> {
-        let h1 = self.dev.smbus_read_byte_data(registers::HUMIDITY_MSB_REG).unwrap();
-        let h2 = self.dev.smbus_read_byte_data(registers::HUMIDITY_LSB_REG).unwrap();
-
-        let adc_h = (i32::from(h1) << 8) |
-                         (i32::from(h2) << 4);
-
-        let humidity = self.calibration.humidity.compensate_humidity(adc_h, self.t_fine);
+        let adc_h = i2c::get_humidity_raw(&mut self.dev);
+        let humidity = self.calibration.humidity.compensate_humidity(adc_h as i32, self.t_fine);
 
         Ok(f64::from(humidity) / 1024.0)
     }
+
 }
