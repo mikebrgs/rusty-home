@@ -3,5 +3,7 @@
 // and from the Bosch BME280 manual.
 
 mod sensors;
+mod protocols;
 
-pub use sensors::bme280::BME280;
+pub use sensors::bme280;
+pub use sensors::veml6030;

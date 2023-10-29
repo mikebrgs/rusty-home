@@ -1,5 +1,7 @@
+#![allow(dead_code)]
 use byteorder::{LittleEndian, BigEndian, ByteOrder};
-use i2cdev::core::I2CDevice;
+use crate::protocols::i2c::I2CWrapper;
+use embedded_hal::blocking::i2c::{Write, WriteRead};
 
 use crate::sensors::bme280::constants::registers;
 
@@ -18,7 +20,7 @@ impl Calibration {
         }
     }
 
-    pub fn build(dev: &mut impl I2CDevice) -> Calibration {
+    pub fn build<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> Calibration {
         Self::new(
             TemperatureCalibration::build(dev),
             PressureCalibration::build(dev),
@@ -39,7 +41,7 @@ impl TemperatureCalibration {
         TemperatureCalibration{t1,t2,t3}
     }
 
-    fn build(dev: &mut impl I2CDevice) -> TemperatureCalibration {
+    fn build<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> TemperatureCalibration {
         Self::new(
             Self::read_register_t1(dev),
             Self::read_register_t2(dev),
@@ -47,7 +49,7 @@ impl TemperatureCalibration {
         )
     }
 
-    fn read_register_t1(dev: &mut impl I2CDevice) -> u16 {
+    fn read_register_t1<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> u16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_T1_LSB_REG,
             registers::DIG_T1_MSB_REG
@@ -55,7 +57,7 @@ impl TemperatureCalibration {
         LittleEndian::read_u16(&buffer)
     }
 
-    fn read_register_t2(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_t2<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_T2_LSB_REG,
             registers::DIG_T2_MSB_REG
@@ -63,7 +65,7 @@ impl TemperatureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_t3(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_t3<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_T3_LSB_REG,
             registers::DIG_T3_MSB_REG
@@ -95,7 +97,7 @@ impl PressureCalibration {
         PressureCalibration{p1,p2,p3,p4,p5,p6,p7,p8,p9}
     }
 
-    fn build(dev: &mut impl I2CDevice) -> PressureCalibration {
+    fn build<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> PressureCalibration {
         Self::new(
             Self::read_register_p1(dev),
             Self::read_register_p2(dev),
@@ -109,7 +111,7 @@ impl PressureCalibration {
         )
     }
 
-    fn read_register_p1(dev: &mut impl I2CDevice) -> u16 {
+    fn read_register_p1<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> u16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P1_LSB_REG,
             registers::DIG_P1_MSB_REG
@@ -117,7 +119,7 @@ impl PressureCalibration {
         LittleEndian::read_u16(&buffer)
     }
 
-    fn read_register_p2(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p2<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P2_LSB_REG,
             registers::DIG_P2_MSB_REG
@@ -125,7 +127,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p3(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p3<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P3_LSB_REG,
             registers::DIG_P3_MSB_REG
@@ -133,7 +135,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p4(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p4<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P4_LSB_REG,
             registers::DIG_P4_MSB_REG
@@ -141,7 +143,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p5(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p5<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P5_LSB_REG,
             registers::DIG_P5_MSB_REG
@@ -149,7 +151,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p6(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p6<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P6_LSB_REG,
             registers::DIG_P6_MSB_REG
@@ -157,7 +159,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p7(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p7<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P7_LSB_REG,
             registers::DIG_P7_MSB_REG
@@ -165,7 +167,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p8(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p8<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P8_LSB_REG,
             registers::DIG_P8_MSB_REG
@@ -173,7 +175,7 @@ impl PressureCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_p9(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_p9<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer = read_multiple_registers(dev, &[
             registers::DIG_P9_LSB_REG,
             registers::DIG_P9_MSB_REG
@@ -218,7 +220,7 @@ impl HumidityCalibration {
         HumidityCalibration{h1,h2,h3,h4,h5,h6}
     }
 
-    pub fn build(dev: &mut impl I2CDevice) -> HumidityCalibration {
+    pub fn build<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> HumidityCalibration {
         Self::new(
             Self::read_register_h1(dev),
             Self::read_register_h2(dev),
@@ -229,12 +231,12 @@ impl HumidityCalibration {
         )
     }
 
-    fn read_register_h1(dev: &mut impl I2CDevice) -> u8 {
+    fn read_register_h1<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> u8 {
         let mut buffer = read_multiple_registers(dev, &[registers::DIG_H1_REG]).unwrap();
         buffer.pop().unwrap()
     }
 
-    fn read_register_h2(dev: &mut impl I2CDevice) -> i16 {
+    fn read_register_h2<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
         let buffer: Vec<u8> = read_multiple_registers(dev, &[
             registers::DIG_H2_LSB_REG,
             registers::DIG_H2_MSB_REG,
@@ -242,26 +244,32 @@ impl HumidityCalibration {
         LittleEndian::read_i16(&buffer)
     }
 
-    fn read_register_h3(dev: &mut impl I2CDevice) -> u8 {
+    fn read_register_h3<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> u8 {
         let mut buffer = read_multiple_registers(dev, &[registers::DIG_H3_REG]).unwrap();
         buffer.pop().unwrap()
     }
 
-    fn read_register_h4(dev: &mut impl I2CDevice) -> i16 {
-        let h4_msb = dev.smbus_read_byte_data(registers::DIG_H4_MSB_REG).unwrap();
-        let h4_lsb = dev.smbus_read_byte_data(registers::DIG_H4_LSB_REG).unwrap();
-        ((u16::from(h4_msb) << 4) | (u16::from(h4_lsb) & 0x0F)) as i16
+    fn read_register_h4<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
+        let mut buffer  = [0u8; 2];
+        dev.read_from_register(registers::DIG_H4_MSB_REG, &mut buffer[0..1]).unwrap();
+        dev.read_from_register(registers::DIG_H4_LSB_REG, &mut buffer[1..2]).unwrap();
+
+        ((u16::from(buffer[0]) << 4) | (u16::from(buffer[1]) & 0x0F)) as i16
     }
 
-    fn read_register_h5(dev: &mut impl I2CDevice) -> i16 {
-        let h4_lsb = dev.smbus_read_byte_data(registers::DIG_H4_LSB_REG).unwrap();
-        let h5_msb = dev.smbus_read_byte_data(registers::DIG_H5_MSB_REG).unwrap();
-        (((u16::from(h5_msb) << 4)) | ((u16::from(h4_lsb) >> 4) & 0x0F)) as i16
+    fn read_register_h5<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i16 {
+        let mut buffer  = [0u8; 2];
+        dev.read_from_register(registers::DIG_H5_MSB_REG, &mut buffer[0..1]).unwrap();
+        dev.read_from_register(registers::DIG_H4_LSB_REG, &mut buffer[1..2]).unwrap();
+
+        (((u16::from(buffer[0]) << 4)) | ((u16::from(buffer[1]) >> 4) & 0x0F)) as i16
     }
 
-    fn read_register_h6(dev: &mut impl I2CDevice) -> i8 {
-        let h4_lsb = dev.smbus_read_byte_data(registers::DIG_H6_REG).unwrap();
-        h4_lsb as i8
+    fn read_register_h6<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> i8 {
+        let mut buffer  = [0u8; 1];
+        dev.read_from_register(registers::DIG_H6_REG, &mut buffer).unwrap();
+
+        buffer[0] as i8
     }
 
     pub fn compensate_humidity(self: &Self, adc_h: i32, t_fine: i32) -> u32 {
@@ -281,11 +289,12 @@ impl HumidityCalibration {
 }
 
 
-fn read_multiple_registers(dev: &mut impl I2CDevice, registers: &[u8]) -> Result<Vec<u8>, ()> {
-    let mut buffer = vec![];
+fn read_multiple_registers<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>, registers: &[u8]) -> Result<Vec<u8>, ()> {
+    let mut buffer: Vec<u8> = vec![];
     for register in registers.iter() {
-        match dev.smbus_read_byte_data(*register) {
-            Ok(byte) => buffer.push(byte),
+        let mut temp_buffer  = [0u8];
+        match dev.read_from_register(*register, &mut temp_buffer) {
+            Ok(_) => buffer.extend(temp_buffer),
             Err(_) => {return Err(())}
         }
     }

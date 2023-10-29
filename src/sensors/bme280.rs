@@ -1,12 +1,14 @@
 use std::u8;
 
-use i2cdev::core::I2CDevice;
+use embedded_hal::blocking::i2c::{Write, WriteRead};
 
 pub mod calibration;
 pub mod i2c;
 pub mod constants;
 
-use constants::values;
+use constants::{values, addresses};
+
+use crate::protocols::i2c::I2CWrapper;
 
 pub enum Mode {
     Sleep,
@@ -72,27 +74,27 @@ impl From<Oversampling> for u8 {
 }
 
 pub enum StandyTime {
-    T05,
-    T625,
-    T1250,
-    T2500,
-    T5000,
-    T10000,
-    T100,
-    T200
+    Ms0_5,
+    Ms62_5,
+    Ms125,
+    Ms250,
+    Ms500,
+    Ms1000,
+    Ms10,
+    Ms20
 }
 
 impl From<u8> for StandyTime {
     fn from(value: u8) -> Self {
         match value {
-            0 => StandyTime::T05,
-            1 => StandyTime::T625,
-            2 => StandyTime::T1250,
-            3 => StandyTime::T2500,
-            4 => StandyTime::T5000,
-            5 => StandyTime::T10000,
-            6 => StandyTime::T100,
-            7 => StandyTime::T200,
+            0 => StandyTime::Ms0_5,
+            1 => StandyTime::Ms62_5,
+            2 => StandyTime::Ms125,
+            3 => StandyTime::Ms250,
+            4 => StandyTime::Ms500,
+            5 => StandyTime::Ms1000,
+            6 => StandyTime::Ms10,
+            7 => StandyTime::Ms20,
             _ => panic!("Invalid standby value")
         }
     }
@@ -101,14 +103,14 @@ impl From<u8> for StandyTime {
 impl From<StandyTime> for u8 {
     fn from(value: StandyTime) -> Self {
         match value {
-             StandyTime::T05 => 0,
-             StandyTime::T625 => 1,
-             StandyTime::T1250 => 2,
-             StandyTime::T2500 => 3,
-             StandyTime::T5000 => 4,
-             StandyTime::T10000 => 5,
-             StandyTime::T100 => 6,
-             StandyTime::T200 => 7
+             StandyTime::Ms0_5 => 0,
+             StandyTime::Ms62_5 => 1,
+             StandyTime::Ms125 => 2,
+             StandyTime::Ms250 => 3,
+             StandyTime::Ms500 => 4,
+             StandyTime::Ms1000 => 5,
+             StandyTime::Ms10 => 6,
+             StandyTime::Ms20 => 7
         }
     }
 }
@@ -146,23 +148,45 @@ impl From<Filter> for u8 {
     }
 }
 
+pub enum Address {
+    Default,
+    Alternative
+}
+
+impl From<Address> for u8 {
+    fn from(value: Address) -> Self {
+        match value {
+            Address::Default => addresses::DEFAULT,
+            Address::Alternative => addresses::ALTERNATIVE
+        }
+    }
+}
+
+
 pub struct BME280<I2C> {
-    dev: I2C,
+    dev: I2CWrapper<I2C>,
     calibration: calibration::Calibration,
     t_fine: i32,
 }
 
-impl<I2C: I2CDevice> BME280<I2C> {
+impl<I2C: Write + WriteRead> BME280<I2C> {
 
     // Create new BME280 device wrapper for I2C communication.
-    pub fn new(mut dev: I2C) -> BME280<I2C> {
-        let calibration = calibration::Calibration::build(&mut dev);
-        BME280 { dev: dev, calibration: calibration, t_fine: 0 }
+    pub fn new(dev: I2C, address: u8) -> BME280<I2C> {
+        let mut wrapper = I2CWrapper::new(dev, address);
+        let calibration = calibration::Calibration::build(&mut wrapper);
+        BME280 { dev: wrapper, calibration: calibration, t_fine: 0 }
+    }
+
+    pub fn build(dev: I2C, address: u8) -> BME280<I2C> {
+        let mut sensor = BME280::new(dev, address);
+        sensor.start().unwrap();
+        sensor
     }
 
     // Start all parameters from for the sensor
     pub fn start(&mut self) -> Result<(), String> {
-        self.set_standby_time(StandyTime::T05).unwrap();
+        self.set_standby_time(StandyTime::Ms0_5).unwrap();
         self.set_filter(Filter::Off).unwrap();
         self.set_temperature_oversample(Oversampling::Ox1).unwrap();
         self.set_pressure_oversample(Oversampling::Ox1).unwrap();

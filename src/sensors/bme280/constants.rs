@@ -58,3 +58,8 @@ pub mod registers {
     pub const RST_REG: u8 = 0xE0;  // Softreset Reg
 
 }
+
+pub mod addresses {
+    pub const DEFAULT: u8 = 0x76;
+    pub const ALTERNATIVE: u8 = 0x77;
+}
