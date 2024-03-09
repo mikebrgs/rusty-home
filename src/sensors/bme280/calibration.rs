@@ -1,8 +1,8 @@
-#![allow(dead_code)]
+#![allow(unused_imports)]
 use byteorder::{LittleEndian, BigEndian, ByteOrder};
-use crate::protocols::i2c::I2CWrapper;
 use embedded_hal::blocking::i2c::{Write, WriteRead};
 
+use crate::protocols::i2c::I2CWrapper;
 use crate::sensors::bme280::constants::registers;
 
 pub struct Calibration {
