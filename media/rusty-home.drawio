@@ -1,26 +1,48 @@
-<mxfile host="Electron" modified="2024-03-03T21:05:05.043Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.1.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="jnnAlbfwXDryMdEkA9gb" version="23.1.5" type="device">
+<mxfile host="Electron" modified="2024-03-10T15:53:18.710Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.1.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="zU2tgaFofY98UgWolcCy" version="23.1.5" type="device">
   <diagram name="Page-1" id="AhhKvRdlrHZ2yFmtE-ge">
-    <mxGraphModel dx="1114" dy="999" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="928" dy="833" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-13" target="9PnJs_GjN8zH73VXDC2d-4">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-33" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="97.5" width="120" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-34" value="Lighting service" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="250" y="152.5" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-35" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="195" width="120" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-36" value="Moisture service" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="250" y="250" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-28" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" width="120" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-28" target="9PnJs_GjN8zH73VXDC2d-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="60" as="sourcePoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-1" value="Atmospheric Sensor" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="40" width="120" height="40" as="geometry" />
+          <mxGeometry x="40" y="15" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-2" target="9PnJs_GjN8zH73VXDC2d-4">
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-33" target="9PnJs_GjN8zH73VXDC2d-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="140" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-2" target="9PnJs_GjN8zH73VXDC2d-33">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-2" value="Lighting Sensor" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="120" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-16" target="9PnJs_GjN8zH73VXDC2d-4">
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-35" target="9PnJs_GjN8zH73VXDC2d-4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-3" value="Humidity Sensor" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="200" width="120" height="40" as="geometry" />
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-3" value="Moisture Sensor" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="217.5" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-4" target="9PnJs_GjN8zH73VXDC2d-8">
           <mxGeometry relative="1" as="geometry" />
@@ -31,32 +53,32 @@
         <mxCell id="9PnJs_GjN8zH73VXDC2d-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-8" target="9PnJs_GjN8zH73VXDC2d-9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-8" value="Go aligner" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-8" value="GO DB service" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="560" y="120" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-9" value="TSDB" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
           <mxGeometry x="720" y="100" width="60" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-1" target="9PnJs_GjN8zH73VXDC2d-13">
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="280" y="60" as="sourcePoint" />
-            <mxPoint x="400" y="120" as="targetPoint" />
+            <mxPoint x="280" y="35" as="sourcePoint" />
+            <mxPoint x="220" y="35" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-13" value="rust driver" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="240" y="40" width="80" height="40" as="geometry" />
+          <mxGeometry x="240" y="12" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-15" value="rust driver" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="240" y="120" width="80" height="40" as="geometry" />
+          <mxGeometry x="240" y="109.5" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-3" target="9PnJs_GjN8zH73VXDC2d-16">
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="9PnJs_GjN8zH73VXDC2d-3" target="9PnJs_GjN8zH73VXDC2d-35">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="160" y="220" as="sourcePoint" />
             <mxPoint x="400" y="160" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-16" value="rust driver" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="240" y="200" width="80" height="40" as="geometry" />
+          <mxGeometry x="240" y="210" width="80" height="40" as="geometry" />
         </mxCell>
         <mxCell id="9PnJs_GjN8zH73VXDC2d-19" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="63" y="360" width="350" height="120" as="geometry" />
@@ -73,8 +95,8 @@
         <mxCell id="9PnJs_GjN8zH73VXDC2d-25" value="Humidty sensor driver" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="303" y="380" width="90" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="9PnJs_GjN8zH73VXDC2d-26" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;rotation=90;size=0.5;" vertex="1" parent="1">
-          <mxGeometry x="224.25" y="160" width="27.5" height="355" as="geometry" />
+        <mxCell id="9PnJs_GjN8zH73VXDC2d-32" value="Atmospheric service" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="250" y="55" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
