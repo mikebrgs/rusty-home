@@ -2,7 +2,7 @@ extern crate chrono;
 
 use embedded_hal_mock::i2c::{Mock as I2cMock, Transaction as I2cTransaction};
 
-use hello_i2c::{bme280::{self, constants::values}, moisture, veml6030};
+use hello_i2c::{bme280, moisture, veml6030};
 
 fn mock_veml6030() -> veml6030::VEML6030<I2cMock> {
     let address: u8 = veml6030::Address::Default.into();
