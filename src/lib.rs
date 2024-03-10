@@ -7,3 +7,4 @@ mod protocols;
 
 pub use sensors::bme280;
 pub use sensors::veml6030;
+pub use sensors::moisture;

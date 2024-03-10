@@ -2,7 +2,7 @@ extern crate chrono;
 
 use embedded_hal_mock::i2c::{Mock as I2cMock, Transaction as I2cTransaction};
 
-use hello_i2c::{veml6030, bme280};
+use hello_i2c::{bme280::{self, constants::values}, moisture, veml6030};
 
 fn mock_veml6030() -> veml6030::VEML6030<I2cMock> {
     let address: u8 = veml6030::Address::Default.into();
@@ -133,14 +133,30 @@ fn mock_bme280() -> bme280::BME280<I2cMock> {
     bme280::BME280::build(i2c, address)
 }
 
+fn mock_moisture() -> moisture::Moisture<I2cMock> {
+    let address: u8 = moisture::Address::Default.into();
+    let expectations = [
+        I2cTransaction::write_read(address, vec![0x05], vec![0x00, 0x00]),
+    ];
+    let i2c = I2cMock::new(&expectations);
+
+    moisture::Moisture::build(i2c, address)
+}
+
+
 
 fn main() {
     let mut sensor_veml6030 = mock_veml6030();
     let mut sensor_bme280 = mock_bme280();
+    let mut sensor_moisture = mock_moisture();
     
     // Ambient light sensor
     let value = sensor_veml6030.get_ambient_light_lux().unwrap();
     println!("Lux value: {}", value);
+
+    // Moisture sensor
+    let value = sensor_moisture.get_moisture_level().unwrap();
+    println!("Moisture level: {}", value);
 
     // Atmospheric sensor
     let value = sensor_bme280.get_temperature_celsius().unwrap();
@@ -149,5 +165,4 @@ fn main() {
     println!("Pressure value: {}", value);
     let value = sensor_bme280.get_humidity_relative().unwrap();
     println!("Humidity value: {}", value);
-
 }
