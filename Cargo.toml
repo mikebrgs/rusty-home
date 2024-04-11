@@ -11,7 +11,7 @@ chrono = "0.4.31"
 embedded-hal = "0.2.7"
 embedded-hal-mock = "0.9.0"
 i2cdev = "0.6.0"
-linux-embedded-hal = "0.3.2"
+linux-embedded-hal = { version = "0.3.2", optional = true}
 
 [[bin]]
 name = "mock"
