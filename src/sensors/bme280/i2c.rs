@@ -108,5 +108,5 @@ pub fn get_humidity_raw<I2C: Write + WriteRead>(dev: &mut I2CWrapper<I2C>) -> u3
     dev.read_from_register(registers::HUMIDITY_MSB_REG, &mut buffer[0..1]).unwrap();
     dev.read_from_register(registers::HUMIDITY_LSB_REG, &mut buffer[1..2]).unwrap();
 
-    (u32::from(buffer[0]) << 8) | (u32::from(buffer[1]) << 4)
+    (u32::from(buffer[0]) << 8) | (u32::from(buffer[1]))
 }
