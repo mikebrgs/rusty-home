@@ -27,60 +27,60 @@ fn mock_bme280() -> bme280::BME280<I2cMock> {
     let expectations = [
         // Temperature calibration
         // T1 calibration
-        I2cTransaction::write_read(address, vec![0x88], ((28485_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x89], ((28485_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x88], ((28485_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x89], ((28485_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // T2 calibration
-        I2cTransaction::write_read(address, vec![0x8A], ((26735_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x8B], ((26735_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x8A], ((26735_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x8B], ((26735_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // T3 calibration
-        I2cTransaction::write_read(address, vec![0x8C], ((50_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x8D], ((50_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x8C], ((50_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x8D], ((50_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
 
         // Pressure calibration
         // P1 calibration
-        I2cTransaction::write_read(address, vec![0x8E], ((36738_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x8F], ((36738_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x8E], ((36738_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x8F], ((36738_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P2 calibration
-        I2cTransaction::write_read(address, vec![0x90], ((-10635_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x91], ((-10635_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x90], ((-10635_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x91], ((-10635_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P3 calibration
-        I2cTransaction::write_read(address, vec![0x92], ((3024_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x93], ((3024_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x92], ((3024_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x93], ((3024_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P4 calibration
-        I2cTransaction::write_read(address, vec![0x94], ((6980_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x95], ((6980_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x94], ((6980_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x95], ((6980_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P5 calibration
-        I2cTransaction::write_read(address, vec![0x96], ((-4_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x97], ((-4_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x96], ((-4_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x97], ((-4_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P6 calibration
-        I2cTransaction::write_read(address, vec![0x98], ((-7_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x99], ((-7_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x98], ((-7_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x99], ((-7_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P7 calibration
-        I2cTransaction::write_read(address, vec![0x9A], ((9900_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x9B], ((9900_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x9A], ((9900_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x9B], ((9900_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P8 calibration
-        I2cTransaction::write_read(address, vec![0x9C], ((-10230_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x9D], ((-10230_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x9C], ((-10230_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x9D], ((-10230_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // P9 calibration
-        I2cTransaction::write_read(address, vec![0x9E], ((4285_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0x9F], ((4285_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0x9E], ((4285_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0x9F], ((4285_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
 
         // Humidity calibration
         // H1 calibration
-        I2cTransaction::write_read(address, vec![0xA1], ((75_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
+        I2cTransaction::write_read(address, vec![0xA1], ((75_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
         // H2 calibration
-        I2cTransaction::write_read(address, vec![0xE1], ((365_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0xE2], ((365_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0xE1], ((365_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0xE2], ((365_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // H3 calibration
-        I2cTransaction::write_read(address, vec![0xE3], ((0_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
+        I2cTransaction::write_read(address, vec![0xE3], ((0_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
         // H4 calibration
-        I2cTransaction::write_read(address, vec![0xE4], ((312_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0xE5], ((312_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0xE4], ((312_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0xE5], ((312_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // H5 calibration
-        I2cTransaction::write_read(address, vec![0xE6], ((50_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
-        I2cTransaction::write_read(address, vec![0xE5], ((50_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),  // T2 part2
+        I2cTransaction::write_read(address, vec![0xE6], ((50_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+        I2cTransaction::write_read(address, vec![0xE5], ((50_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
         // H6 calibration
-        I2cTransaction::write_read(address, vec![0xE7], ((30_i64 & 0xFF) as u8).to_be_bytes().to_vec()),  // T1 part1
+        I2cTransaction::write_read(address, vec![0xE7], ((30_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
 
         // Standby
         I2cTransaction::write_read(address, vec![0xF5], vec![0x00]),  // Get stanby status
@@ -125,8 +125,8 @@ fn mock_bme280() -> bme280::BME280<I2cMock> {
         I2cTransaction::write_read(address, vec![0xF8], vec![0x00]),
         I2cTransaction::write_read(address, vec![0xF9], vec![0x00]),
         // Read humidity
-        I2cTransaction::write_read(address, vec![0xFD], vec![0x0F]),
-        I2cTransaction::write_read(address, vec![0xFE], vec![0x00]),
+        I2cTransaction::write_read(address, vec![0xFD], vec![115]),
+        I2cTransaction::write_read(address, vec![0xFE], vec![249]),
     ];
     let i2c = I2cMock::new(&expectations);
 

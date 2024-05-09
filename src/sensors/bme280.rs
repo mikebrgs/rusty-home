@@ -295,3 +295,145 @@ impl<I2C: Write + WriteRead> BME280<I2C> {
     }
 
 }
+
+
+#[cfg(test)]
+mod tests {
+    use embedded_hal_mock::i2c::{Mock as I2cMock, Transaction as I2cTransaction};
+
+    use super::{Address, BME280, constants::registers};
+
+    #[test]
+    fn read_humidity() {
+        let address: u8 = Address::Default.into();
+        let mut expectations = get_mock_calibration(address);
+        expectations.push(
+            I2cTransaction::write_read(address, vec![0xFD], vec![110]),    
+        );
+        expectations.push(
+            I2cTransaction::write_read(address, vec![0xFE], vec![213]),
+        );
+
+        let i2c = I2cMock::new(&expectations);
+
+        let mut bme280_sensor = BME280::new(i2c, address); // = BME280::build(i2c, addresses::DEFAULT);
+        bme280_sensor.t_fine = 0;
+        let humidity = bme280_sensor.get_humidity_relative().unwrap();
+        
+        assert!(humidity - 46.159 < 0.1);
+    }
+
+    #[test]
+    fn read_temperature() {
+        let address: u8 = Address::Default.into();
+        let mut expectations = get_mock_calibration(address);
+        expectations.push(
+            I2cTransaction::write_read(address, vec![registers::TEMPERATURE_MSB_REG], vec![0])
+        );
+        expectations.push(
+            I2cTransaction::write_read(address, vec![registers::TEMPERATURE_LSB_REG], vec![0])
+        );
+        expectations.push(
+            I2cTransaction::write_read(address, vec![registers::TEMPERATURE_XLSB_REG], vec![0])
+        );
+        
+        let i2c = I2cMock::new(&expectations);
+
+        let mut bme280_sensor = BME280::new(i2c, address);
+        bme280_sensor.t_fine = 0;
+        let temperature = bme280_sensor.get_temperature_celsius().unwrap();
+
+        assert!(temperature > -100.);
+        assert!(temperature < 100.);
+    }
+
+    #[test]
+    fn read_pressure() {
+        let address: u8 = Address::Default.into();
+        let mut expectations = get_mock_calibration(address);
+        expectations.push(
+            I2cTransaction::write_read(address, vec![registers::PRESSURE_MSB_REG], vec![0])
+        );
+        expectations.push(
+            I2cTransaction::write_read(address, vec![registers::PRESSURE_LSB_REG], vec![0])
+        );
+        expectations.push(
+            I2cTransaction::write_read(address, vec![registers::PRESSURE_XLSB_REG], vec![0])
+        );
+        
+        let i2c = I2cMock::new(&expectations);
+
+        let mut bme280_sensor = BME280::new(i2c, address);
+        bme280_sensor.t_fine = 0;
+        let pressure = bme280_sensor.get_pressure_pascal().unwrap();
+
+        assert!(pressure > 0.0);
+    }
+
+    fn get_mock_calibration(address: u8) -> Vec<I2cTransaction> {
+        let expectations = vec![
+            I2cTransaction::write_read(address, vec![registers::DIG_T1_LSB_REG], ((28485_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![registers::DIG_T1_MSB_REG], ((28485_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // T2 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_T2_LSB_REG], ((26735_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![registers::DIG_T2_MSB_REG], ((26735_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // T3 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_T3_LSB_REG], ((50_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![registers::DIG_T3_MSB_REG], ((50_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+
+            // Pressure calibration
+            // P1 calibration
+            I2cTransaction::write_read(address, vec![0x8E], ((36738_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x8F], ((36738_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P2 calibration
+            I2cTransaction::write_read(address, vec![0x90], ((-10635_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x91], ((-10635_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P3 calibration
+            I2cTransaction::write_read(address, vec![0x92], ((3024_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x93], ((3024_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P4 calibration
+            I2cTransaction::write_read(address, vec![0x94], ((6980_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x95], ((6980_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P5 calibration
+            I2cTransaction::write_read(address, vec![0x96], ((-4_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x97], ((-4_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P6 calibration
+            I2cTransaction::write_read(address, vec![0x98], ((-7_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x99], ((-7_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P7 calibration
+            I2cTransaction::write_read(address, vec![0x9A], ((9900_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x9B], ((9900_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P8 calibration
+            I2cTransaction::write_read(address, vec![0x9C], ((-10230_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x9D], ((-10230_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+            // P9 calibration
+            I2cTransaction::write_read(address, vec![0x9E], ((4285_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![0x9F], ((4285_i64 & 0xFF00 >> 8) as u8).to_be_bytes().to_vec()),
+
+            // TODO check all calibration values from python for sample case
+            // Humidity calibration
+            // H1 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_H1_REG], ((75_i64 & 0xFF) as u8).to_be_bytes().to_vec()),
+            // H2 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_H2_LSB_REG], ((109 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![registers::DIG_H2_MSB_REG], ((1 & 0xFF) as u8).to_be_bytes().to_vec()),
+            // H3 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_H3_REG], ((0 & 0xFF) as u8).to_be_bytes().to_vec()),
+            // H4 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_H4_MSB_REG], ((19 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![registers::DIG_H4_LSB_REG], ((40 & 0xFF) as u8).to_be_bytes().to_vec()),
+            // H5 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_H5_MSB_REG], ((3 & 0xFF) as u8).to_be_bytes().to_vec()),
+            I2cTransaction::write_read(address, vec![registers::DIG_H4_LSB_REG], ((40 & 0xFF) as u8).to_be_bytes().to_vec()),
+            // H6 calibration
+            I2cTransaction::write_read(address, vec![registers::DIG_H6_REG], ((30 & 0xFF) as u8).to_be_bytes().to_vec()),
+        ];
+        return expectations
+    }
+
+    #[test]
+    fn random() {
+        dbg!((((50_i64 & 0xFF)) as u8).to_be_bytes().to_vec());
+        dbg!((((50_i64 & 0xFF00) >> 8) as u8).to_be_bytes().to_vec());
+    }
+}
